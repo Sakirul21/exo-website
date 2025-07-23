@@ -54,16 +54,29 @@ export default function Home() {
           
           {/* Frosted Glass Box */}
           <div className="relative bg-white/15 backdrop-blur-[10px] p-4 rounded-2xl shadow-2xl border border-white/20">
-            <h1 className={`text-3xl md:text-5xl font-extrabold mb-6 text-white drop-shadow-lg text-left transition-all duration-500 ease-out ${
-              isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-            }`}>
+            <h1
+              className={`text-3xl md:text-5xl font-extrabold mb-6 text-white drop-shadow-lg text-left transition-all duration-500 ease-out ${
+                isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+              }`}
+            >
               <span className="text-purple-400">Exo</span> Dynamics
             </h1>
-            <p className={`text-lg md:text-xl max-w-2xl text-white font-medium text-left transition-all duration-500 ease-out delay-150 ${
-              isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-            }`}>
-              A versatile drone ecosystem—hardware, software, and services built for every industry.
+            <p
+              className={`text-lg md:text-xl max-w-2xl text-white font-medium text-left transition-all duration-500 ease-out delay-150 ${
+                isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+              }`}
+            >
+              A versatile drone ecosystem—hardware, software, and services built
+              for every industry.
             </p>
+            <Link
+              href="/products"
+              className={`inline-block mt-6 px-6 py-3 rounded-full bg-purple-700 text-white font-semibold shadow-lg hover:bg-purple-800 transition-colors duration-300 ${
+                isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+              }`}
+            >
+              Explore Products
+            </Link>
           </div>
         </div>
         
@@ -89,7 +102,26 @@ export default function Home() {
         </div>
       </section>
 
-      
+
+      {/* Features Section */}
+      <section id="features" className="py-20 px-6 md:px-16 bg-zinc-50 border-y border-purple-200">
+        <h2 className="text-2xl font-bold mb-10 text-purple-500 border-b-2 border-purple-900 inline-block">
+          Why Choose Exo
+        </h2>
+        <ul className="grid md:grid-cols-3 gap-8 text-zinc-700">
+          <li className="text-center p-4 bg-white rounded-2xl shadow-md">
+            High-performance drones built for reliability.
+          </li>
+          <li className="text-center p-4 bg-white rounded-2xl shadow-md">
+            Modular payloads for a variety of missions.
+          </li>
+          <li className="text-center p-4 bg-white rounded-2xl shadow-md">
+            Expert support and training from our team.
+          </li>
+        </ul>
+      </section>
+
+
       {/* Products Section */}
       <section id="products" className="py-24 md:py-32 px-6 md:px-16 bg-gradient-to-b from-zinc-200 via-zinc-100 to-zinc-200">
         <Link href="/products">
