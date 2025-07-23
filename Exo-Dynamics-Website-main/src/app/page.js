@@ -1,13 +1,42 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 
 export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const [scrollY, setScrollY] = useState(0);
+
+  const videoRef = useRef(null);
+
+  function useInView(options) {
+    const ref = useRef(null);
+    const [inView, setInView] = useState(false);
+
+    useEffect(() => {
+      const observer = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          observer.unobserve(entry.target);
+        }
+      }, options);
+      if (ref.current) observer.observe(ref.current);
+      return () => observer.disconnect();
+    }, [ref, options]);
+
+    return [ref, inView];
+  }
+
+  const [featuresRef, featuresInView] = useInView({ threshold: 0.2 });
+  const [productsRef, productsInView] = useInView({ threshold: 0.2 });
+  const [aboutRef, aboutInView] = useInView({ threshold: 0.2 });
+  const [contactRef, contactInView] = useInView({ threshold: 0.2 });
 
   useEffect(() => {
     setIsLoaded(true);
+    const handleScroll = () => setScrollY(window.scrollY);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
   return (
     <main className="min-h-screen bg-white text-zinc-900 font-sans">
@@ -19,16 +48,21 @@ export default function Home() {
       >
         {/* Background Video */}
         <video
-          className={`absolute inset-0 w-full h-full object-cover z-0 transition-transform duration-300 ease-out ${
-            isHovered ? 'scale-105' : 'scale-100'
-          }`}
+          ref={videoRef}
+          className="absolute inset-0 w-full h-full object-cover z-0"
           src="/drone.mp4"
           autoPlay
           loop
           muted
           playsInline
           poster="/drone-hovering.mp4"
-          style={{ objectFit: 'cover', objectPosition: 'center', background: '#18181b' }}
+          style={{
+            objectFit: 'cover',
+            objectPosition: 'center',
+            background: '#18181b',
+            transform: `translateY(${scrollY * 0.2}px) scale(${isHovered ? 1.05 : 1})`,
+            transition: 'transform 0.3s ease-out',
+          }}
         >
           {/* Fallback for browsers that don't support video */}
           <img src="/drone-hovering.gif" alt="Drone Hovering" className="w-full h-full object-cover" style={{ background: '#18181b' }} />
@@ -104,7 +138,13 @@ export default function Home() {
 
 
       {/* Features Section */}
-      <section id="features" className="py-20 px-6 md:px-16 bg-zinc-50 border-y border-purple-200">
+      <section
+        id="features"
+        ref={featuresRef}
+        className={`py-20 px-6 md:px-16 bg-zinc-50 border-y border-purple-200 ${
+          featuresInView ? 'animate-fade-in-up' : 'opacity-0'
+        }`}
+      >
         <h2 className="text-2xl font-bold mb-10 text-purple-500 border-b-2 border-purple-900 inline-block">
           Why Choose Exo
         </h2>
@@ -123,7 +163,13 @@ export default function Home() {
 
 
       {/* Products Section */}
-      <section id="products" className="py-24 md:py-32 px-6 md:px-16 bg-gradient-to-b from-zinc-200 via-zinc-100 to-zinc-200">
+      <section
+        id="products"
+        ref={productsRef}
+        className={`py-24 md:py-32 px-6 md:px-16 bg-gradient-to-b from-zinc-200 via-zinc-100 to-zinc-200 ${
+          productsInView ? 'animate-fade-in-up' : 'opacity-0'
+        }`}
+      >
         <Link href="/products">
         <h2 className="text-3xl font-bold mb-10 text-purple-500 border-b-2 border-purple-900 inline-block">Our Products</h2>
         </Link>
@@ -150,7 +196,13 @@ export default function Home() {
       </section>
 
       {/* Company Info Section */}
-      <section id="about" className="py-24 md:py-32 px-6 md:px-16 bg-white">
+      <section
+        id="about"
+        ref={aboutRef}
+        className={`py-24 md:py-32 px-6 md:px-16 bg-white ${
+          aboutInView ? 'animate-fade-in-up' : 'opacity-0'
+        }`}
+      >
         <h2 className="text-2xl font-bold mb-10 text-purple-500 border-b-2 border-purple-900 inline-block">Company Info</h2>
         <div className="max-w-3xl text-zinc-700 mx-auto text-lg">
           <p>
@@ -164,7 +216,13 @@ export default function Home() {
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="py-24 md:py-32 px-6 md:px-16 bg-gradient-to-r from-zinc-100 via-white to-zinc-100">
+      <section
+        id="contact"
+        ref={contactRef}
+        className={`py-24 md:py-32 px-6 md:px-16 bg-gradient-to-r from-zinc-100 via-white to-zinc-100 ${
+          contactInView ? 'animate-fade-in-up' : 'opacity-0'
+        }`}
+      >
         <h2 className="text-2xl font-bold mb-10 text-purple-500 border-b-2 border-purple-900 inline-block">Contact</h2>
         <form className="max-w-xl mx-auto flex flex-col gap-6 bg-white p-8 rounded-2xl shadow-xl border border-purple-200">
           <input type="text" placeholder="Your Name" className="p-4 rounded bg-zinc-50 border border-purple-200 text-zinc-900 placeholder-purple-600" />
